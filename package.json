@@ -1,8 +1,12 @@
 {
   "name": "hello-dima",
   "displayName": "hello-dima",
-  "description": "Visual Studio Code extension developmnet basics",
+  "description": "Quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click. Use Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows/Linux) to open the quick pick list.",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dimaportenko/vscode-helper"
+  },
   "engines": {
     "vscode": "^1.96.2"
   },
@@ -33,7 +37,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "package": "npx vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.96.2",

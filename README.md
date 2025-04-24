@@ -1,71 +1,86 @@
-# hello-dima README
+# Git Modified Files Quick Pick
 
-This is the README for your extension "hello-dima". After writing up a brief description, we recommend including the following sections.
+A VS Code extension that allows you to quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- Shows a quick pick list of all modified git files
+- Displays git status for each file (M for modified, A for added, D for deleted, etc.)
+- Quick keyboard shortcut access
+- Opens selected file directly in the editor
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+### Option 1: Install from VSIX (Recommended)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Download the latest VSIX package from the releases
+2. Open VS Code/Cursor
+3. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+4. Type "Extensions: Install from VSIX"
+5. Select the downloaded VSIX file
+6. Reload the editor when prompted
+
+### Option 2: Development Mode Installation
+
+1. Clone this repository
+2. Open the project in VS Code/Cursor
+3. Press `F5` to start debugging
+4. A new editor window will open with the extension loaded
+5. The extension will be available in this development window
+
+### Building the VSIX Package
+
+To create a VSIX package for distribution:
+
+1. Make sure all dependencies are installed:
+   ```bash
+   pnpm install
+   ```
+
+2. Compile the TypeScript code:
+   ```bash
+   pnpm run compile
+   ```
+
+3. Create the VSIX package:
+   ```bash
+   pnpm run package
+   ```
+
+The VSIX file will be created in the project root directory.
+
+## Usage
+
+### Keyboard Shortcut
+
+- Mac: `Cmd+Shift+G`
+- Windows/Linux: `Ctrl+Shift+G`
+
+### Command Palette
+
+1. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
+2. Type "Show Modified Git Files"
+3. Select the command from the list
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code or Cursor editor
+- Git installed on your system
+- A git repository open in the editor
 
-## Extension Settings
+## Troubleshooting
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+If the extension doesn't work as expected:
 
-For example:
+1. Make sure you have a git repository open in your workspace
+2. Check that git is properly installed and accessible from the command line
+3. Verify that there are modified files in your repository
+4. Try reloading the editor window
 
-This extension contributes the following settings:
+## Contributing
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+Feel free to submit issues and enhancement requests!
 
-## Known Issues
+## License
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+This extension is licensed under the MIT License.
