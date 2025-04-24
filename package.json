@@ -14,8 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "hello-dima.helloWorld",
-        "title": "First Hello World Command"
+        "command": "hello-dima.showModifiedFiles",
+        "title": "Show Modified Git Files"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "hello-dima.showModifiedFiles",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g",
+        "when": "editorTextFocus"
       }
     ]
   },
