@@ -1,6 +1,6 @@
 {
-  "name": "git-modified-quick-pick",
-  "displayName": "Git Modified Quick Pick",
+  "name": "files-quick-pick",
+  "displayName": "Files Quick Pick",
   "description": "Quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click. Use Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows/Linux) to open the quick pick list.",
   "version": "0.0.1",
   "repository": {
@@ -18,13 +18,13 @@
   "contributes": {
     "commands": [
       {
-        "command": "git-modified-quick-pick.showModifiedFiles",
+        "command": "files-quick-pick.showModifiedFiles",
         "title": "Show Modified Git Files"
       }
     ],
     "keybindings": [
       {
-        "command": "git-modified-quick-pick.showModifiedFiles",
+        "command": "files-quick-pick.showModifiedFiles",
         "key": "ctrl+shift+g",
         "mac": "cmd+shift+g",
         "when": "editorTextFocus"

@@ -6,9 +6,9 @@ import * as cp from 'child_process';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Congratulations, your extension "git-modified-quick-pick" is now active!');
+	console.log('Congratulations, your extension "files-quick-pick" is now active!');
 
-	const disposable = vscode.commands.registerCommand('git-modified-quick-pick.showModifiedFiles', async () => {
+	const disposable = vscode.commands.registerCommand('files-quick-pick.showModifiedFiles', async () => {
 		try {
 			// Get the current workspace folder
 			const workspaceFolder = vscode.workspace.workspaceFolders?.[0];

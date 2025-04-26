@@ -1,4 +1,4 @@
-# Git Modified Files Quick Pick
+# Files Quick Pick
 
 A VS Code extension that allows you to quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click.
 
