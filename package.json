@@ -52,6 +52,7 @@
     ]
   },
   "scripts": {
+    "assable": "pnpm install && pnpm run compile && pnpm run package",
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
