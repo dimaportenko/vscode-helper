@@ -8,6 +8,10 @@ A VS Code extension that allows you to quickly navigate through modified git fil
 - Displays git status for each file (M for modified, A for added, D for deleted, etc.)
 - Quick keyboard shortcut access
 - Opens selected file directly in the editor
+- Search files by content using ripgrep
+- Smart JavaScript workspace detection and search
+- Persistent search state across sessions
+- Line number navigation in search results
 
 ## Installation
 
@@ -51,22 +55,35 @@ The VSIX file will be created in the project root directory.
 
 ## Usage
 
-### Keyboard Shortcut
+### Keyboard Shortcuts
 
-- Mac: `Cmd+Shift+G`
-- Windows/Linux: `Ctrl+Shift+G`
+- Show Modified Files:
+  - Mac: `Cmd+Shift+G`
+  - Windows/Linux: `Ctrl+Shift+G`
+
+- Search Files by Content:
+  - Mac: `Cmd+Shift+'`
+  - Windows/Linux: `Ctrl+Shift+'`
+
+- Search in JS Workspace:
+  - Mac: `Cmd+E`
+  - Windows/Linux: `Ctrl+E`
 
 ### Command Palette
 
 1. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
-2. Type "Show Modified Git Files"
+2. Type one of the following commands:
+   - "Files Quick Pick: Show Modified Files"
+   - "Files Quick Pick: Search Files by Content"
+   - "Files Quick Pick: Search in JS Workspace"
 3. Select the command from the list
 
 ## Requirements
 
-- VS Code or Cursor editor
-- Git installed on your system
+- [VS Code](https://code.visualstudio.com/) or [Cursor](https://cursor.sh/) editor
+- [Git](https://git-scm.com/) installed on your system
 - A git repository open in the editor
+- [ripgrep](https://github.com/BurntSushi/ripgrep) installed for content search functionality
 
 ## Troubleshooting
 
