@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as cp from "child_process";
 import { FileItem } from "../types/file-picker";
+import { getPathLabel } from "../utils/path";
 
 interface SearchResult {
   filePath: string;
@@ -63,7 +64,7 @@ export class RipgrepService {
 
       result.matches.forEach((match) => {
         pickItems.push({
-          label: `${result.filePath.split("/").pop()}:${match.lineNumber}`,
+          label: getPathLabel(result.filePath),
           detail: match.lineText,
           description: result.filePath,
           filePath: result.filePath,

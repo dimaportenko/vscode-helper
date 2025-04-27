@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as cp from 'child_process';
 import { FileItem } from '../types/file-picker';
+import { getPathLabel } from '../utils/path';
 
 export class GitService {
     static async getModifiedFiles(workspaceFolder: vscode.WorkspaceFolder): Promise<FileItem[]> {
@@ -20,8 +21,9 @@ export class GitService {
                 const status = line.substring(0, 2).trim();
                 const filePath = line.substring(3);
                 return {
-                    label: filePath,
+                    label: getPathLabel(filePath),
                     description: status,
+                    detail: filePath,
                     filePath: filePath
                 };
             });
