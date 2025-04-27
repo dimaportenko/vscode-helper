@@ -19,7 +19,11 @@
     "commands": [
       {
         "command": "files-quick-pick.showModifiedFiles",
-        "title": "Show Modified Git Files"
+        "title": "Show Modified Files"
+      },
+      {
+        "command": "files-quick-pick.searchFiles",
+        "title": "Search Files by Content"
       }
     ],
     "keybindings": [
@@ -27,6 +31,12 @@
         "command": "files-quick-pick.showModifiedFiles",
         "key": "ctrl+shift+g",
         "mac": "cmd+shift+g",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "files-quick-pick.searchFiles",
+        "key": "ctrl+shift+'",
+        "mac": "cmd+shift+'",
         "when": "editorTextFocus"
       }
     ]

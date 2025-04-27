@@ -4,7 +4,10 @@ import { FileItem } from '../types/file-picker';
 export async function openFile(fileItem: FileItem, workspaceFolder: vscode.WorkspaceFolder): Promise<void> {
     const fileUri = vscode.Uri.joinPath(workspaceFolder.uri, fileItem.filePath);
     const document = await vscode.workspace.openTextDocument(fileUri);
-    await vscode.window.showTextDocument(document);
+    const lineNumber = fileItem.lineNumber ? fileItem.lineNumber - 1 : 0;
+    await vscode.window.showTextDocument(document, {
+        selection: new vscode.Range(lineNumber, 0, lineNumber, 0)
+    });
 }
 
 export function showNoFilesMessage(message: string): void {

@@ -1,9 +1,10 @@
-export interface FileItem {
-    label: string;
-    description: string;
-    filePath: string;
+import * as vscode from "vscode";
+
+export interface FileItem extends vscode.QuickPickItem {
+  filePath: string;
+  lineNumber?: number;
 }
 
 export interface FilePickerCommand {
-    execute(): Promise<void>;
-} 
+  execute(): Promise<void>;
+}
