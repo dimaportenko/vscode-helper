@@ -2,10 +2,20 @@ import * as vscode from "vscode";
 import { FileItem, FilePickerCommand } from "../types/file-picker";
 import { RipgrepService } from "../services/ripgrep-service";
 import { openFile, showNoFilesMessage, showError } from "../utils/file-utils";
+import * as cp from 'child_process';
 
 export class SearchFilesCommand implements FilePickerCommand {
   private quickPick: vscode.QuickPick<FileItem> | undefined;
-  private searchTimeout: NodeJS.Timeout | undefined;
+  private currentProcesses: cp.ChildProcess[] = [];
+
+  private killAllProcesses() {
+    this.currentProcesses.forEach(process => {
+      if (!process.killed) {
+        process.kill();
+      }
+    });
+    this.currentProcesses = [];
+  }
 
   async execute(): Promise<void> {
     try {
@@ -21,27 +31,29 @@ export class SearchFilesCommand implements FilePickerCommand {
 
       // Handle input changes
       this.quickPick.onDidChangeValue(async (value) => {
-        if (this.searchTimeout) {
-          clearTimeout(this.searchTimeout);
-        }
+        // Kill all previous processes
+        this.killAllProcesses();
 
         if (!value.trim()) {
           this.quickPick!.items = [];
           return;
         }
 
-        // Debounce search to avoid too many requests
-        this.searchTimeout = setTimeout(async () => {
-          try {
-            const foundFiles = await RipgrepService.searchFiles(
-              workspaceFolder,
-              value
-            );
-            this.quickPick!.items = foundFiles;
-          } catch (error) {
-            showError(error as Error);
-          }
-        }, 200); // 300ms debounce
+        try {
+          this.quickPick!.busy = true;
+          const process = await RipgrepService.searchFiles(
+            workspaceFolder,
+            value,
+            (files) => {
+              this.quickPick!.items = files;
+              this.quickPick!.busy = false;
+            }
+          );
+          this.currentProcesses.push(process);
+        } catch (error) {
+          showError(error as Error);
+          this.quickPick!.busy = false;
+        }
       });
 
       // Handle selection
@@ -55,10 +67,8 @@ export class SearchFilesCommand implements FilePickerCommand {
 
       // Handle cancellation
       this.quickPick.onDidHide(() => {
+        this.killAllProcesses();
         this.quickPick!.dispose();
-        if (this.searchTimeout) {
-          clearTimeout(this.searchTimeout);
-        }
       });
 
       this.quickPick.show();

@@ -14,68 +14,47 @@ interface SearchResult {
 export class RipgrepService {
   static async searchFiles(
     workspaceFolder: vscode.WorkspaceFolder,
-    searchText: string
-  ): Promise<FileItem[]> {
-    const rgProcess = cp.spawnSync(
+    searchText: string,
+    onResults: (files: FileItem[]) => void
+  ): Promise<cp.ChildProcess> {
+    const rgProcess = cp.spawn(
       "rg",
       ["--smart-case", "--line-number", "--color", "never", searchText, "./"],
       {
         cwd: workspaceFolder.uri.fsPath,
-        encoding: "utf8",
-        maxBuffer: 1024 * 1024 * 10, // 10MB buffer
       }
     );
 
-    if (rgProcess.error) {
-      if ((rgProcess.error as NodeJS.ErrnoException).code === 'ENOBUFS') {
-        throw new Error("Search results too large. Please try a more specific search.");
-      }
-      throw new Error("Failed to execute ripgrep: " + rgProcess.error.message);
-    }
+    let output = "";
+    let error = "";
 
-    if (rgProcess.status !== 0 && rgProcess.status !== 1) {
-      throw new Error("Ripgrep search failed with status: " + rgProcess.status);
-    }
-
-    // Parse the output into structured results
-    const results = this.parseRipgrepOutput(rgProcess.stdout);
-
-    // Convert to FileItems
-    const pickItems: FileItem[] = [];
-    results.forEach((result) => {
-    //   pickItems.push({
-    //     label: result.filePath,
-    //     description: searchText,
-    //     detail: searchText,
-    //     filePath: "",
-    //     kind: vscode.QuickPickItemKind.Separator,
-    //   });
-
-    //   pickItems.push({
-    //     // _type: "QuickPickItemRgMenuAction",
-    //     label: result.filePath,
-    //     description: `${searchText} ${result.matches.length} matches`,
-    //     filePath: result.filePath,
-    //     kind: vscode.QuickPickItemKind.Default,
-    //     // detail: result.matches
-    //     //   .map((match) => `Line ${match.lineNumber}: ${match.lineText}`)
-    //     //   .join("\n"),
-    //   });
-
-      result.matches.forEach((match) => {
-        pickItems.push({
-          label: getPathLabel(result.filePath),
-          detail: match.lineText,
-          description: result.filePath,
-          filePath: result.filePath,
-          kind: vscode.QuickPickItemKind.Default,
-          lineNumber: match.lineNumber,
-        });
-      });
-
+    rgProcess.stdout.on("data", (data) => {
+      output += data.toString();
+      const results = this.parseRipgrepOutput(output);
+      const pickItems = this.convertToFileItems(results, searchText);
+      onResults(pickItems);
     });
 
-    return pickItems;
+    rgProcess.stderr.on("data", (data) => {
+      error += data.toString();
+    });
+
+    rgProcess.on("error", (err) => {
+      if ((err as NodeJS.ErrnoException).code === "ENOBUFS") {
+        throw new Error(
+          "Search results too large. Please try a more specific search."
+        );
+      }
+      throw new Error("Failed to execute ripgrep: " + err.message);
+    });
+
+    rgProcess.on("close", (code) => {
+      if (code !== 0 && code !== 1) {
+        throw new Error("Ripgrep search failed with status: " + code);
+      }
+    });
+
+    return rgProcess;
   }
 
   private static parseRipgrepOutput(output: string): SearchResult[] {
@@ -103,5 +82,25 @@ export class RipgrepService {
       });
 
     return Object.values(results);
+  }
+
+  private static convertToFileItems(
+    results: SearchResult[],
+    searchText: string
+  ): FileItem[] {
+    const pickItems: FileItem[] = [];
+    results.forEach((result) => {
+      result.matches.forEach((match) => {
+        pickItems.push({
+          label: getPathLabel(result.filePath),
+          detail: match.lineText,
+          description: result.filePath,
+          filePath: result.filePath,
+          kind: vscode.QuickPickItemKind.Default,
+          lineNumber: match.lineNumber,
+        });
+      });
+    });
+    return pickItems;
   }
 }
