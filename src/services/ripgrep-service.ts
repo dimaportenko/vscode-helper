@@ -19,7 +19,7 @@ export class RipgrepService {
   ): Promise<cp.ChildProcess> {
     const rgProcess = cp.spawn(
       "rg",
-      ["--smart-case", "--line-number", "--color", "never", searchText, "./"],
+      ["--max-columns", "250", "--smart-case", "--line-number", "--color", "never", searchText, "./"],
       {
         cwd: workspaceFolder.uri.fsPath,
       }
