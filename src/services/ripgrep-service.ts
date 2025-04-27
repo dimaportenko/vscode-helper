@@ -15,11 +15,22 @@ export class RipgrepService {
   static async searchFiles(
     workspaceFolder: vscode.WorkspaceFolder,
     searchText: string,
-    onResults: (files: FileItem[]) => void
+    onResults: (files: FileItem[]) => void,
+    searchPath?: string
   ): Promise<cp.ChildProcess> {
+    const searchDir = searchPath || "./";
     const rgProcess = cp.spawn(
       "rg",
-      ["--max-columns", "250", "--smart-case", "--line-number", "--color", "never", searchText, "./"],
+      [
+        "--max-columns",
+        "250",
+        "--smart-case",
+        "--line-number",
+        "--color",
+        "never",
+        searchText,
+        searchDir,
+      ],
       {
         cwd: workspaceFolder.uri.fsPath,
       }
@@ -31,7 +42,7 @@ export class RipgrepService {
     rgProcess.stdout.on("data", (data) => {
       output += data.toString();
       const results = this.parseRipgrepOutput(output);
-      const pickItems = this.convertToFileItems(results, searchText);
+      const pickItems = this.convertToFileItems(results);
       onResults(pickItems);
     });
 
@@ -84,10 +95,7 @@ export class RipgrepService {
     return Object.values(results);
   }
 
-  private static convertToFileItems(
-    results: SearchResult[],
-    searchText: string
-  ): FileItem[] {
+  private static convertToFileItems(results: SearchResult[]): FileItem[] {
     const pickItems: FileItem[] = [];
     results.forEach((result) => {
       result.matches.forEach((match) => {
