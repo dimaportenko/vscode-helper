@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { ShowModifiedFilesCommand } from "./commands/show-modified-files";
 import { SearchFilesCommand } from "./commands/search-files";
 import { SearchInJsWorkspaceCommand } from "./commands/search-in-js-workspace";
+import { SearchFilesInWorkspaceCommand } from "./commands/search-files-in-workspace";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
   const showModifiedFilesCommand = new ShowModifiedFilesCommand();
   const searchFilesCommand = new SearchFilesCommand();
   const searchInJsWorkspaceCommand = new SearchInJsWorkspaceCommand(context);
+  const searchFilesInWorkspaceCommand = new SearchFilesInWorkspaceCommand(context);
 
   const modifiedFilesDisposable = vscode.commands.registerCommand(
     "files-quick-pick.showModifiedFiles",
@@ -31,10 +33,16 @@ export function activate(context: vscode.ExtensionContext) {
     () => searchInJsWorkspaceCommand.execute()
   );
 
+  const searchFilesInWorkspaceDisposable = vscode.commands.registerCommand(
+    "files-quick-pick.searchFilesInWorkspace",
+    () => searchFilesInWorkspaceCommand.execute()
+  );
+
   context.subscriptions.push(
     modifiedFilesDisposable,
     searchFilesDisposable,
-    searchInJsWorkspaceDisposable
+    searchInJsWorkspaceDisposable,
+    searchFilesInWorkspaceDisposable
   );
 }
 

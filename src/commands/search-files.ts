@@ -2,14 +2,14 @@ import * as vscode from "vscode";
 import { FileItem, FilePickerCommand } from "../types/file-picker";
 import { RipgrepService } from "../services/ripgrep-service";
 import { openFile, showNoFilesMessage, showError } from "../utils/file-utils";
-import * as cp from 'child_process';
+import * as cp from "child_process";
 
 export class SearchFilesCommand implements FilePickerCommand {
   private quickPick: vscode.QuickPick<FileItem> | undefined;
   private currentProcesses: cp.ChildProcess[] = [];
 
   private killAllProcesses() {
-    this.currentProcesses.forEach(process => {
+    this.currentProcesses.forEach((process) => {
       if (!process.killed) {
         process.kill();
       }
@@ -41,14 +41,14 @@ export class SearchFilesCommand implements FilePickerCommand {
 
         try {
           this.quickPick!.busy = true;
-          const process = await RipgrepService.searchFiles(
+          const process = await RipgrepService.searchFiles({
             workspaceFolder,
-            value,
-            (files) => {
+            searchText: value,
+            onResults: (files) => {
               this.quickPick!.items = files;
               this.quickPick!.busy = false;
-            }
-          );
+            },
+          });
           this.currentProcesses.push(process);
         } catch (error) {
           showError(error as Error);

@@ -12,29 +12,30 @@ interface SearchResult {
 }
 
 export class RipgrepService {
-  static async searchFiles(
-    workspaceFolder: vscode.WorkspaceFolder,
-    searchText: string,
-    onResults: (files: FileItem[]) => void,
-    searchPath?: string
-  ): Promise<cp.ChildProcess> {
+  static async searchFiles({
+    workspaceFolder,
+    searchText,
+    onResults,
+    searchPath,
+    rgArgs = [
+      "--max-columns",
+      "250",
+      "--smart-case",
+      "--line-number",
+      "--color",
+      "never",
+    ],
+  }: {
+    workspaceFolder: vscode.WorkspaceFolder;
+    searchText: string;
+    onResults: (files: FileItem[]) => void;
+    searchPath?: string;
+    rgArgs?: string[];
+  }): Promise<cp.ChildProcess> {
     const searchDir = searchPath || "./";
-    const rgProcess = cp.spawn(
-      "rg",
-      [
-        "--max-columns",
-        "250",
-        "--smart-case",
-        "--line-number",
-        "--color",
-        "never",
-        searchText,
-        searchDir,
-      ],
-      {
-        cwd: workspaceFolder.uri.fsPath,
-      }
-    );
+    const rgProcess = cp.spawn("rg", [...rgArgs, searchText, searchDir], {
+      cwd: workspaceFolder.uri.fsPath,
+    });
 
     let output = "";
     let error = "";

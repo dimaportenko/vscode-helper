@@ -1,17 +1,18 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import * as cp from "child_process";
 import { FileItem, FilePickerCommand } from "../types/file-picker";
 import { RipgrepService } from "../services/ripgrep-service";
 import { openFile, showError } from "../utils/file-utils";
+import { getPathLabel } from "../utils/path";
 import { detectJsWorkspace } from "../utils/workspace-utils";
-import * as cp from "child_process";
 
 interface SearchState {
   searchText: string;
   workspacePath?: string;
 }
 
-export class SearchInJsWorkspaceCommand implements FilePickerCommand {
+export class SearchFilesInWorkspaceCommand implements FilePickerCommand {
   private quickPick: vscode.QuickPick<FileItem> | undefined;
   private currentProcesses: cp.ChildProcess[] = [];
   private workspaceRoot: string = "";
@@ -43,11 +44,11 @@ export class SearchInJsWorkspaceCommand implements FilePickerCommand {
       searchText,
       workspacePath,
     };
-    this.context.globalState.update("searchInJsWorkspaceState", state);
+    this.context.globalState.update("searchFilesInWorkspaceState", state);
   }
 
   private getState(): SearchState | undefined {
-    return this.context.globalState.get("searchInJsWorkspaceState");
+    return this.context.globalState.get("searchFilesInWorkspaceState");
   }
 
   async execute(): Promise<void> {
@@ -82,7 +83,7 @@ export class SearchInJsWorkspaceCommand implements FilePickerCommand {
 
       this.quickPick = vscode.window.createQuickPick();
       this.quickPick.placeholder =
-        "Type to search files by content in " +
+        "Type to search files by path in " +
         (workspaceInfo.currentWorkspacePath
           ? "current workspace"
           : "project root");
@@ -119,12 +120,24 @@ export class SearchInJsWorkspaceCommand implements FilePickerCommand {
                   this.workspaceRoot
                 ),
                 description: file.description
-                  ? this.makePathRelativeToRoot(file.description, searchRoot)
+                  ? this.makePathRelativeToRoot(
+                      file.description,
+                      this.workspaceRoot
+                    )
                   : undefined,
               }));
               this.quickPick!.items = adjustedFiles;
               this.quickPick!.busy = false;
             },
+            rgArgs: [
+              "--files",
+              "--max-columns",
+              "250",
+              "--smart-case",
+              "--line-number",
+              "--color",
+              "never",
+            ],
             searchPath: searchRoot,
           });
           this.currentProcesses.push(process);
