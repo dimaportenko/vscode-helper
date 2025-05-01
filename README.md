@@ -10,6 +10,7 @@ A VS Code extension that allows you to quickly navigate through modified git fil
 - Opens selected file directly in the editor
 - Search files by content using ripgrep
 - Smart JavaScript workspace detection and search
+- Search files by path in JavaScript workspaces
 - Persistent search state across sessions
 - Line number navigation in search results
 
@@ -69,6 +70,10 @@ The VSIX file will be created in the project root directory.
   - Mac: `Cmd+E`
   - Windows/Linux: `Ctrl+E`
 
+- Search Files in Workspace:
+  - Mac: `Ctrl+Shift+P`
+  - Windows/Linux: `Ctrl+Shift+P`
+
 ### Command Palette
 
 1. Press `Cmd+Shift+P` (Mac) or `Ctrl+Shift+P` (Windows/Linux)
@@ -76,6 +81,7 @@ The VSIX file will be created in the project root directory.
    - "Files Quick Pick: Show Modified Files"
    - "Files Quick Pick: Search Files by Content"
    - "Files Quick Pick: Search in JS Workspace"
+   - "Files Quick Pick: Search Files in Workspace"
 3. Select the command from the list
 
 ## Requirements
