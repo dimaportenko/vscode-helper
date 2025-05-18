@@ -69,13 +69,6 @@ export class SearchInJsWorkspaceCommand implements FilePickerCommand {
         currentFile
       );
 
-      if (!workspaceInfo.isJsWorkspace) {
-        vscode.window.showInformationMessage(
-          "This is not a JavaScript workspace"
-        );
-        return;
-      }
-
       // Determine the search root
       const searchRoot =
         workspaceInfo.currentWorkspacePath || workspaceFolder.uri.fsPath;
