@@ -2,7 +2,7 @@
   "name": "files-quick-pick",
   "displayName": "Files Quick Pick",
   "description": "Quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click. Use Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows/Linux) to open the quick pick list.",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/dimaportenko/vscode-helper"
