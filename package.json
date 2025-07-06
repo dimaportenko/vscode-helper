@@ -2,13 +2,13 @@
   "name": "files-quick-pick",
   "displayName": "Files Quick Pick",
   "description": "Quickly navigate through modified git files in your workspace. Shows a list of all changed files with their git status and allows you to open them with a single click. Use Cmd+Shift+G (Mac) or Ctrl+Shift+G (Windows/Linux) to open the quick pick list.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/dimaportenko/vscode-helper"
   },
   "engines": {
-    "vscode": "^1.96.2"
+    "vscode": "^1.99.3"
   },
   "categories": [
     "Other"
@@ -72,14 +72,14 @@
     "package": "npx vsce package"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.2",
+    "@types/vscode": "^1.99.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^9.23.0",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9.30.1",
     "typescript": "^5.8.2",
-    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.4.1"
   }
 }

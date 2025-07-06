@@ -7,6 +7,7 @@ import * as cp from "child_process";
 export class SearchFilesCommand implements FilePickerCommand {
   private quickPick: vscode.QuickPick<FileItem> | undefined;
   private currentProcesses: cp.ChildProcess[] = [];
+  private usingLiteralSearch = false;
 
   private killAllProcesses() {
     this.currentProcesses.forEach((process) => {
@@ -15,6 +16,24 @@ export class SearchFilesCommand implements FilePickerCommand {
       }
     });
     this.currentProcesses = [];
+  }
+
+  private async performSearch(
+    workspaceFolder: vscode.WorkspaceFolder,
+    searchText: string,
+    onResults: (files: FileItem[]) => void,
+    useLiteralSearch = false
+  ): Promise<cp.ChildProcess> {
+    const rgArgs = useLiteralSearch
+      ? ["--max-columns", "250", "--smart-case", "--line-number", "--color", "never", "--fixed-strings"]
+      : ["--max-columns", "250", "--smart-case", "--line-number", "--color", "never"];
+
+    return RipgrepService.searchFiles({
+      workspaceFolder,
+      searchText,
+      onResults,
+      rgArgs,
+    });
   }
 
   async execute(): Promise<void> {
@@ -34,6 +53,9 @@ export class SearchFilesCommand implements FilePickerCommand {
         // Kill all previous processes
         this.killAllProcesses();
 
+        // Reset placeholder when input changes
+        this.quickPick!.placeholder = "Type to search files by content";
+
         if (!value.trim()) {
           this.quickPick!.items = [];
           return;
@@ -41,14 +63,47 @@ export class SearchFilesCommand implements FilePickerCommand {
 
         try {
           this.quickPick!.busy = true;
-          const process = await RipgrepService.searchFiles({
+          this.usingLiteralSearch = false;
+          
+          const process = await this.performSearch(
             workspaceFolder,
-            searchText: value,
-            onResults: (files) => {
+            value,
+            (files) => {
               this.quickPick!.items = files;
               this.quickPick!.busy = false;
-            },
+            }
+          );
+
+          // Handle process errors for fallback
+          process.on("close", async (code) => {
+            if (code === 2 && !this.usingLiteralSearch) {
+              // Regex syntax error, retry with literal search
+              this.killAllProcesses();
+              this.usingLiteralSearch = true;
+              
+              try {
+                const literalProcess = await this.performSearch(
+                  workspaceFolder,
+                  value,
+                  (files) => {
+                    this.quickPick!.items = files;
+                    this.quickPick!.busy = false;
+                  },
+                  true
+                );
+                this.currentProcesses.push(literalProcess);
+                
+                // Update placeholder to indicate literal search
+                if (this.quickPick) {
+                  this.quickPick.placeholder = "Type to search files by content (literal search mode)";
+                }
+              } catch (error) {
+                showError(error as Error);
+                this.quickPick!.busy = false;
+              }
+            }
           });
+
           this.currentProcesses.push(process);
         } catch (error) {
           showError(error as Error);

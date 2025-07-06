@@ -32,6 +32,11 @@ export class RipgrepService {
     searchPath?: string;
     rgArgs?: string[];
   }): Promise<cp.ChildProcess> {
+    // Validate search text
+    if (!searchText || !searchText.trim()) {
+      throw new Error("Search text cannot be empty");
+    }
+
     const searchDir = searchPath || "./";
     const rgProcess = cp.spawn("rg", [...rgArgs, searchText, searchDir], {
       cwd: workspaceFolder.uri.fsPath,
@@ -61,8 +66,12 @@ export class RipgrepService {
     });
 
     rgProcess.on("close", (code) => {
-      if (code !== 0 && code !== 1) {
-        throw new Error("Ripgrep search failed with status: " + code);
+      // Exit code 0: success, 1: no matches found, 2: error (often regex syntax)
+      // null: process was killed (e.g., user typed new search)
+      // We don't throw for these codes as they are expected behaviors
+      if (code !== null && code !== 0 && code !== 1 && code !== 2) {
+        const errorMessage = error ? `Ripgrep search failed with status: ${code}. Error: ${error}` : `Ripgrep search failed with status: ${code}`;
+        throw new Error(errorMessage);
       }
     });
 
