@@ -5,6 +5,7 @@ import { ShowModifiedFilesCommand } from "./commands/show-modified-files";
 import { SearchFilesCommand } from "./commands/search-files";
 import { SearchInJsWorkspaceCommand } from "./commands/search-in-js-workspace";
 import { SearchFilesInWorkspaceCommand } from "./commands/search-files-in-workspace";
+import { copyActiveQuickPickPath } from "./utils/file-utils";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -38,11 +39,17 @@ export function activate(context: vscode.ExtensionContext) {
     () => searchFilesInWorkspaceCommand.execute()
   );
 
+  const copyActivePathDisposable = vscode.commands.registerCommand(
+    "files-quick-pick.copyActivePath",
+    () => copyActiveQuickPickPath()
+  );
+
   context.subscriptions.push(
     modifiedFilesDisposable,
     searchFilesDisposable,
     searchInJsWorkspaceDisposable,
-    searchFilesInWorkspaceDisposable
+    searchFilesInWorkspaceDisposable,
+    copyActivePathDisposable
   );
 }
 

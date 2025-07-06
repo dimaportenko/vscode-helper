@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { FileItem, FilePickerCommand } from "../types/file-picker";
 import { RipgrepService } from "../services/ripgrep-service";
-import { openFile, showNoFilesMessage, showError } from "../utils/file-utils";
+import { openFile, showNoFilesMessage, showError, setupQuickPickCopyHandler } from "../utils/file-utils";
 import * as cp from "child_process";
 
 export class SearchFilesCommand implements FilePickerCommand {
@@ -47,6 +47,9 @@ export class SearchFilesCommand implements FilePickerCommand {
       this.quickPick.placeholder = "Type to search files by content";
       this.quickPick.matchOnDescription = true;
       this.quickPick.matchOnDetail = true;
+      
+      // Setup copy handler
+      setupQuickPickCopyHandler(this.quickPick, workspaceFolder);
 
       // Handle input changes
       this.quickPick.onDidChangeValue(async (value) => {

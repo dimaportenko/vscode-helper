@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { FilePickerCommand } from '../types/file-picker';
+import { FileItem, FilePickerCommand } from '../types/file-picker';
 import { GitService } from '../services/git-service';
-import { openFile, showNoFilesMessage, showError } from '../utils/file-utils';
+import { openFile, showNoFilesMessage, showError, setupQuickPickCopyHandler } from '../utils/file-utils';
 
 export class ShowModifiedFilesCommand implements FilePickerCommand {
     async execute(): Promise<void> {
@@ -18,13 +18,29 @@ export class ShowModifiedFilesCommand implements FilePickerCommand {
                 return;
             }
 
-            const selectedFile = await vscode.window.showQuickPick(modifiedFiles, {
-                placeHolder: 'Select a modified file to open'
+            // Create quick pick instead of using showQuickPick
+            const quickPick = vscode.window.createQuickPick<FileItem>();
+            quickPick.items = modifiedFiles;
+            quickPick.placeholder = 'Select a modified file to open';
+            
+            // Setup copy handler
+            setupQuickPickCopyHandler(quickPick, workspaceFolder);
+
+            // Handle selection
+            quickPick.onDidAccept(async () => {
+                const selectedFile = quickPick.selectedItems[0];
+                if (selectedFile) {
+                    await openFile(selectedFile, workspaceFolder);
+                }
+                quickPick.dispose();
             });
 
-            if (selectedFile) {
-                await openFile(selectedFile, workspaceFolder);
-            }
+            // Handle cancellation
+            quickPick.onDidHide(() => {
+                quickPick.dispose();
+            });
+
+            quickPick.show();
         } catch (error) {
             showError(error as Error);
         }

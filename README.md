@@ -13,6 +13,7 @@ A VS Code extension that allows you to quickly navigate through modified git fil
 - Search files by path in JavaScript workspaces
 - Persistent search state across sessions
 - Line number navigation in search results
+- **Copy file paths**: Quickly copy relative file paths to clipboard with `Cmd+C` (Mac) or `Ctrl+C` (Windows/Linux)
 
 ## Installation
 
@@ -73,6 +74,26 @@ The VSIX file will be created in the project root directory.
 - Search Files in Workspace:
   - Mac: `Ctrl+Shift+P`
   - Windows/Linux: `Ctrl+Shift+P`
+
+- Copy File Path (when file picker is open):
+  - Mac: `Cmd+C`
+  - Windows/Linux: `Ctrl+C`
+
+### Copy File Path Feature
+
+When any file picker is open, you can quickly copy the relative file path of the currently highlighted item:
+
+1. Open any file picker command using the keyboard shortcuts above
+2. Use arrow keys to navigate and highlight any file in the list
+3. Press `Cmd+C` (Mac) or `Ctrl+C` (Windows/Linux) to copy the relative file path
+4. The file path is copied to your clipboard and a confirmation appears in the status bar
+5. The file picker remains open so you can continue browsing and copy multiple paths
+
+This feature works with all file picker commands:
+- Show Modified Files
+- Search Files by Content  
+- Search in JS Workspace
+- Search Files in Workspace
 
 ### Command Palette
 

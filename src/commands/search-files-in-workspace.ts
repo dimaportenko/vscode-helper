@@ -3,7 +3,7 @@ import * as path from "path";
 import * as cp from "child_process";
 import { FileItem, FilePickerCommand } from "../types/file-picker";
 import { RipgrepService } from "../services/ripgrep-service";
-import { openFile, showError } from "../utils/file-utils";
+import { openFile, showError, setupQuickPickCopyHandler } from "../utils/file-utils";
 import { getPathLabel } from "../utils/path";
 import { detectJsWorkspace } from "../utils/workspace-utils";
 
@@ -89,6 +89,9 @@ export class SearchFilesInWorkspaceCommand implements FilePickerCommand {
           : "project root");
       this.quickPick.matchOnDescription = true;
       this.quickPick.matchOnDetail = true;
+      
+      // Setup copy handler
+      setupQuickPickCopyHandler(this.quickPick, workspaceFolder);
 
       // Restore previous state if exists
       const previousState = this.getState();

@@ -32,6 +32,10 @@
       {
         "command": "files-quick-pick.searchFilesInWorkspace",
         "title": "Files Quick Pick: Search Files in Workspace"
+      },
+      {
+        "command": "files-quick-pick.copyActivePath",
+        "title": "Files Quick Pick: Copy Active File Path"
       }
     ],
     "keybindings": [
@@ -58,6 +62,12 @@
         "key": "ctrl+shift+p",
         "mac": "ctrl+shift+p",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "files-quick-pick.copyActivePath",
+        "key": "ctrl+c",
+        "mac": "cmd+c",
+        "when": "filesQuickPick.active"
       }
     ]
   },
