@@ -5,7 +5,7 @@ import { getPathLabel } from '../utils/path';
 
 export class GitService {
     static async getModifiedFiles(workspaceFolder: vscode.WorkspaceFolder): Promise<FileItem[]> {
-        const gitStatus = cp.spawnSync('git', ['status', '--porcelain'], {
+        const gitStatus = cp.spawnSync('git', ['status', '--porcelain', '--untracked-files=all'], {
             cwd: workspaceFolder.uri.fsPath,
             encoding: 'utf8'
         });
