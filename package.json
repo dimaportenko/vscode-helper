@@ -72,7 +72,7 @@
     ]
   },
   "scripts": {
-    "assable": "pnpm install && pnpm run compile && pnpm run package --no-dependencies",
+    "assamble": "pnpm install && pnpm run compile && pnpm run package --no-dependencies",
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
